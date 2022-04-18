@@ -1,0 +1,133 @@
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 48px);
+  padding:0 24px 24px;
+  user-select: none;
+}
+
+main nav {
+  width: 99%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+.counter {
+  width: 2em;
+  text-align: right;
+  padding: 8px;
+  font-size: 2em;
+  font-family: monospace;
+}
+
+.humburger {
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.gameStatusImage {
+  margin: auto;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.gameStatusImage:active {
+  transform: scale(0.9);
+  transition-duration: 50ms;
+}
+
+.gameStatusImage img {
+  width: 60px;
+  height: 60px;
+}
+
+.field-wrapper {
+  height:100%;
+  flex-grow: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.poop-field {
+  display: grid;
+  grid-template-rows: auto;
+  transition: 1s ease-out 0s;
+  grid-gap: 8px;
+}
+
+.square {
+  color: #fffd;
+  padding: 4px 9px;
+  width: 40px;
+  height: 40px;
+  background-color: #062227;
+  border: 2px solid #fffa;
+  border-radius: 4px;
+  transition: 0.3s;
+  font-size: 20px;
+}
+
+.square:hover {
+  box-shadow: 0px 0px 16px 8px rgba(253, 247, 239, 0.8);
+  background-color: #fffb;
+}
+
+.open {
+  background-color: transparent;
+  border-radius: 20px;
+  border: 2px solid #fffa;
+  transition-duration: 0.8s;
+}
+
+.open:hover {
+  background-color: #4e0707cc;
+  box-shadow: 0px 0px 16px 8px #4e0707cc;
+}
+
+.empty {
+  background-color: transparent;
+  border: 2px solid #fff4;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+}
+
+.empty:hover {
+  background-color: #143546;
+  box-shadow: 0px 0px 16px 8px #143546;
+}
+
+.poop {
+  background-image: url("./../images/poop.png");
+  background-size: cover;
+  background-color: #fff0;
+  border: 0;
+}
+
+.poop:hover {
+  background-color: #0000;
+  box-shadow: 0px 0px 16px 8px #000;
+}
+
+.flag {
+  background-image: url("./../images/flag.png");
+  background-position: 4px;
+  background-size: 28px;
+  background-repeat: no-repeat;
+  background-color: rosybrown;
+}
+
+.flag:hover {
+  background-color: #ecd4d4;
+  box-shadow: 0px 0px 16px 8px #ecd4d4;
+}
