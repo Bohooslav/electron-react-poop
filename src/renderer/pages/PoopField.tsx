@@ -50,8 +50,8 @@ export default function PoopField() {
         newDifficulty.height = 16;
         newDifficulty.poops = 40;
       } else if (difficulty === 'senior') {
-        newDifficulty.width = 24;
-        newDifficulty.height = 24;
+        newDifficulty.width = 30;
+        newDifficulty.height = 16;
         newDifficulty.poops = 99;
       }
 
@@ -166,6 +166,11 @@ export default function PoopField() {
       ) {
         newField[i].near += newField[i + store.width + 1].hasPoop;
       }
+
+      // For testing
+      // if (newField[i].near) {
+      //   newField[i].open = true
+      // }
       i++;
     }
     setField(newField);
@@ -346,7 +351,8 @@ export default function PoopField() {
       if (field[index].near === 0) {
         return 'square empty';
       }
-      return 'square open';
+      // Detect color for number of poops around
+      return `square open color${field[index].near}`;
     }
     if (field[index].flag) {
       return 'square flag';

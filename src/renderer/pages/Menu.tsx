@@ -37,8 +37,8 @@ function Menu() {
       newDifficulty.height = 16;
       newDifficulty.poops = 40;
     } else if (difficulty === 'senior') {
-      newDifficulty.width = 24;
-      newDifficulty.height = 24;
+      newDifficulty.width = 30;
+      newDifficulty.height = 16;
       newDifficulty.poops = 99;
     }
     setSettings((old_settings) => ({
@@ -81,8 +81,8 @@ function Menu() {
     }
     if (
       settings.poops === 99 &&
-      settings.width === 24 &&
-      settings.height === 24
+      settings.width === 30 &&
+      settings.height === 16
     ) {
       return (
         <div>

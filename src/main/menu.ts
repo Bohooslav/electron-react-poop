@@ -72,7 +72,7 @@ export default class MenuBuilder {
           click: () => setDifficulty('middle'),
         },
         {
-          label: '🧙 Senior (24↔ 24↕ 99💩)',
+          label: '🧙 Senior (30↔ 16↕ 99💩)',
           click: () => setDifficulty('senior'),
         },
         { type: 'separator' },
@@ -233,7 +233,7 @@ export default class MenuBuilder {
             click: () => setDifficulty('middle'),
           },
           {
-            label: 'Senior (24x24x99💩)',
+            label: 'Senior (30x16x99💩)',
             click: () => setDifficulty('senior'),
           },
           { type: 'separator' },
