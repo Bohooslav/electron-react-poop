@@ -12,10 +12,7 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
 }
 
 function setDifficulty(difficulty: string) {
-  BrowserWindow.getFocusedWindow()!.webContents.send(
-    'update-difficulty',
-    difficulty
-  );
+  BrowserWindow.fromId(1)!.webContents.send('update-difficulty', difficulty);
 }
 
 export default class MenuBuilder {

@@ -49,9 +49,12 @@ function Menu() {
   }
 
   React.useEffect(() => {
-    window.electron.updateDifficulty((_event, difficulty:string) => {
-      setDifficulty(difficulty);
-    });
+    window.electron.ipcRenderer.on(
+      'update-difficulty',
+      (difficulty: string) => {
+        setDifficulty(difficulty);
+      }
+    );
   }, []);
 
   function currentDifficulty() {

@@ -10,13 +10,17 @@ function LeaderBoard() {
   const [counter, setCounter] = React.useState(0);
 
   React.useEffect(() => {
-    console.log(store);
-    setCounter((oldCounter) => oldCounter + 1);
-  }, [store]);
+    window.electron.ipcRenderer.on('update-leaderboard', () => {
+      setCounter((oldCounter) => oldCounter + 1);
+    });
+  }, []);
+
+  console.log(counter);
 
   return (
     <div className="LeaderBoard">
       <h1>LeaderBoard</h1>
+      <p>Counter: {counter}</p>
       <table>
         <thead>
           <tr>

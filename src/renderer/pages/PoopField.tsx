@@ -129,7 +129,7 @@ export default function PoopField() {
       }
 
       // For testing
-      // if (newField[i].near) {
+      // if (newField[i].near && !newField[i].hasPoop) {
       //   newField[i].open = true
       // }
       i++;
@@ -141,29 +141,34 @@ export default function PoopField() {
   }
 
   React.useEffect(() => {
-    window.electron.restart((_event) => generateField());
+    window.electron.ipcRenderer.updateLeaderboard();
 
-    window.electron.updateDifficulty((_event, difficulty: string) => {
-      const newDifficulty: Difficulty = { difficulty };
-      if (difficulty === 'junior') {
-        newDifficulty.width = 9;
-        newDifficulty.height = 9;
-        newDifficulty.poops = 10;
-      } else if (difficulty === 'middle') {
-        newDifficulty.width = 16;
-        newDifficulty.height = 16;
-        newDifficulty.poops = 40;
-      } else if (difficulty === 'senior') {
-        newDifficulty.width = 30;
-        newDifficulty.height = 16;
-        newDifficulty.poops = 99;
+    window.electron.restart(generateField);
+
+    window.electron.ipcRenderer.on(
+      'update-difficulty',
+      (difficulty: string) => {
+        const newDifficulty: Difficulty = { difficulty };
+        if (difficulty === 'junior') {
+          newDifficulty.width = 9;
+          newDifficulty.height = 9;
+          newDifficulty.poops = 10;
+        } else if (difficulty === 'middle') {
+          newDifficulty.width = 16;
+          newDifficulty.height = 16;
+          newDifficulty.poops = 40;
+        } else if (difficulty === 'senior') {
+          newDifficulty.width = 30;
+          newDifficulty.height = 16;
+          newDifficulty.poops = 99;
+        }
+
+        dispatch({
+          type: 'SET_DIFFICULTY',
+          difficulty: newDifficulty,
+        });
       }
-
-      dispatch({
-        type: 'SET_DIFFICULTY',
-        difficulty: newDifficulty,
-      });
-    });
+    );
   }, []);
 
   function startTimer() {
@@ -285,6 +290,7 @@ export default function PoopField() {
         });
         setStatus(STATUS.sunglasses);
         stopTimer();
+        window.electron.ipcRenderer.updateLeaderboard();
 
         dispatch({
           type: 'SAVE_GAME',

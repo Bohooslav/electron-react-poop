@@ -5,7 +5,8 @@ import { FieldSquare, StoreState } from '../../types';
 // Get games data for initial state from localStorage
 const initial: StoreState = {
   difficulty: 'junior',
-  poops: 10,
+  poops: 5,
+  // poops: 10,
   width: 9,
   height: 9,
   games: JSON.parse(localStorage.getItem('games') || '[]'),

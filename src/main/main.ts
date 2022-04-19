@@ -178,6 +178,12 @@ const createLeaderboardWindow = async () => {
  * Add event listeners...
  */
 
+ipcMain.on('update-leaderboard', async () => {
+  if (leaderBoardWindow) {
+    leaderBoardWindow.webContents.send('update-leaderboard');
+  }
+});
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
