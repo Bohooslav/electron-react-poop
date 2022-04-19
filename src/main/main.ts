@@ -24,6 +24,7 @@ import { resolveHtmlPath } from './util';
 // }
 
 let mainWindow: BrowserWindow | null = null;
+let leaderBoardWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -83,7 +84,7 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  mainWindow.loadURL(resolveHtmlPath('/'));
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
@@ -115,6 +116,64 @@ const createWindow = async () => {
   // new AppUpdater();
 };
 
+const createLeaderboardWindow = async () => {
+  if (isDevelopment) {
+    await installExtensions();
+  }
+
+  const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../../assets');
+
+  const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+  };
+
+  leaderBoardWindow = new BrowserWindow({
+    show: false,
+    width: 1024,
+    height: 728,
+    icon: getAssetPath('icon.png'),
+    backgroundColor: '#04060c',
+    darkTheme: true,
+    webPreferences: {
+      preload: app.isPackaged
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../../.erb/dll/preload.js'),
+    },
+  });
+
+  leaderBoardWindow.loadURL(resolveHtmlPath('/leader-board'));
+
+  leaderBoardWindow.on('ready-to-show', () => {
+    if (!leaderBoardWindow) {
+      throw new Error('"leaderBoardWindow" is not defined');
+    }
+    if (process.env.START_MINIMIZED) {
+      leaderBoardWindow.minimize();
+    } else {
+      leaderBoardWindow.show();
+    }
+  });
+
+  leaderBoardWindow.on('closed', () => {
+    leaderBoardWindow = null;
+  });
+
+  const menuBuilder = new MenuBuilder(leaderBoardWindow);
+  menuBuilder.buildMenu();
+
+  // Open urls in the user's browser
+  leaderBoardWindow.webContents.setWindowOpenHandler((edata) => {
+    shell.openExternal(edata.url);
+    return { action: 'deny' };
+  });
+
+  // Remove this if your app does not use auto updates
+  // eslint-disable-next-line
+  // new AppUpdater();
+};
+
 /**
  * Add event listeners...
  */
@@ -131,6 +190,7 @@ app
   .whenReady()
   .then(() => {
     createWindow();
+    createLeaderboardWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.

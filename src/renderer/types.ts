@@ -1,7 +1,9 @@
 export interface StoreState {
+  difficulty: string;
   poops: number;
   width: number;
   height: number;
+  games: GameReacord[];
 }
 
 export interface Difficulty {
@@ -16,4 +18,14 @@ export interface FieldSquare {
   near: number;
   open: boolean;
   flag: boolean;
+}
+
+export interface GameReacord {
+  id: string;
+  difficulty: string;
+  time: number;
+  poops: number;
+  width: number;
+  height: number;
+  field: FieldSquare[];
 }

@@ -1,5 +1,6 @@
 /* eslint-disable no-plusplus */
 import React from 'react';
+import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +19,7 @@ enum STATUS {
   'wow',
 }
 
-let watchInterval: any;
+let watchInterval: NodeJS.Timeout;
 
 export default function PoopField() {
   const store = useSelector((stores: StoreState) => stores);
@@ -35,46 +36,6 @@ export default function PoopField() {
   const [FIELD, setField] = React.useState<FieldSquare[]>([]);
   const [FLAGS, setFlags] = React.useState(0);
   const [WASTHERE, setWasThere] = React.useState<number[]>([]);
-
-  React.useEffect(() => {
-    window.electron.restart((_event) => generateField());
-
-    window.electron.updateDifficulty((_event, difficulty: string) => {
-      const newDifficulty: Difficulty = { difficulty };
-      if (difficulty === 'junior') {
-        newDifficulty.width = 9;
-        newDifficulty.height = 9;
-        newDifficulty.poops = 10;
-      } else if (difficulty === 'middle') {
-        newDifficulty.width = 16;
-        newDifficulty.height = 16;
-        newDifficulty.poops = 40;
-      } else if (difficulty === 'senior') {
-        newDifficulty.width = 30;
-        newDifficulty.height = 16;
-        newDifficulty.poops = 99;
-      }
-
-      dispatch({
-        type: 'SET_DIFFICULTY',
-        difficulty: newDifficulty,
-      });
-    });
-  }, []);
-
-  function startTimer() {
-    setTimer((oldTimer) => ({
-      timerOn: true,
-      timerTime: oldTimer.timerTime,
-      timerStart: Date.now(),
-    }));
-    watchInterval = setInterval(() => {
-      setTimer((oldTimer) => ({
-        ...oldTimer,
-        timerTime: Date.now() - oldTimer.timerStart,
-      }));
-    }, 10);
-  }
 
   function stopTimer() {
     setTimer((oldTimer) => ({ ...oldTimer, timerOn: false }));
@@ -177,6 +138,46 @@ export default function PoopField() {
     setStatus(STATUS.alive);
     setWasThere([]);
     setFlags(0);
+  }
+
+  React.useEffect(() => {
+    window.electron.restart((_event) => generateField());
+
+    window.electron.updateDifficulty((_event, difficulty: string) => {
+      const newDifficulty: Difficulty = { difficulty };
+      if (difficulty === 'junior') {
+        newDifficulty.width = 9;
+        newDifficulty.height = 9;
+        newDifficulty.poops = 10;
+      } else if (difficulty === 'middle') {
+        newDifficulty.width = 16;
+        newDifficulty.height = 16;
+        newDifficulty.poops = 40;
+      } else if (difficulty === 'senior') {
+        newDifficulty.width = 30;
+        newDifficulty.height = 16;
+        newDifficulty.poops = 99;
+      }
+
+      dispatch({
+        type: 'SET_DIFFICULTY',
+        difficulty: newDifficulty,
+      });
+    });
+  }, []);
+
+  function startTimer() {
+    setTimer((oldTimer) => ({
+      timerOn: true,
+      timerTime: oldTimer.timerTime,
+      timerStart: Date.now(),
+    }));
+    watchInterval = setInterval(() => {
+      setTimer((oldTimer) => ({
+        ...oldTimer,
+        timerTime: Date.now() - oldTimer.timerStart,
+      }));
+    }, 10);
   }
 
   // Initialize empty field while routed to this page
@@ -284,6 +285,20 @@ export default function PoopField() {
         });
         setStatus(STATUS.sunglasses);
         stopTimer();
+
+        dispatch({
+          type: 'SAVE_GAME',
+          games: [
+            {
+              id: nanoid(),
+              difficulty: store.difficulty,
+              time: Math.floor(timer.timerTime / 1000),
+              width: store.width,
+              height: store.height,
+            },
+            ...store.games,
+          ],
+        });
       }
     }
     setField(field);
@@ -389,7 +404,7 @@ export default function PoopField() {
           type="button"
           title="Menu"
           className="humburger"
-          onClick={() => navigate('/index.html')}
+          onClick={() => navigate('/')}
         >
           ☰
         </button>

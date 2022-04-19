@@ -11,7 +11,7 @@ import senior from '../images/wizard.png';
 import middle from '../images/man.png';
 
 function Menu() {
-  const store = useSelector((store: StoreState) => store);
+  const store = useSelector((_store: StoreState) => _store);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
