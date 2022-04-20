@@ -14,6 +14,7 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { GameRecord } from 'renderer/types';
 
 // export default class AppUpdater {
 //   constructor() {
@@ -178,9 +179,9 @@ const createLeaderboardWindow = async () => {
  * Add event listeners...
  */
 
-ipcMain.on('update-leaderboard', async () => {
+ipcMain.on('update-leaderboard', async (_, newGame: GameRecord) => {
   if (leaderBoardWindow) {
-    leaderBoardWindow.webContents.send('update-leaderboard');
+    leaderBoardWindow.webContents.send('update-leaderboard', newGame);
   }
 });
 

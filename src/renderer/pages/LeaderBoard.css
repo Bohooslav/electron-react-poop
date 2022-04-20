@@ -1,3 +1,13 @@
 .LeaderBoard {
   padding: 24px;
 }
+
+td {
+  padding: 2px 8px;
+  width: 35%;
+}
+
+table {
+  width: 100%;
+  max-width: 512px;
+}

@@ -1,42 +1,51 @@
-import { contextIsolated } from 'process';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { StoreState } from 'renderer/types';
+import { GameRecord, StoreState } from 'renderer/types';
 
 import './LeaderBoard.css';
 
 function LeaderBoard() {
   const store = useSelector((_store: StoreState) => _store);
-  const [counter, setCounter] = React.useState(0);
+  const [games, setGames] = React.useState(store.games);
 
   React.useEffect(() => {
-    window.electron.ipcRenderer.on('update-leaderboard', () => {
-      setCounter((oldCounter) => oldCounter + 1);
-    });
+    return window.electron.ipcRenderer.on(
+      'update-leaderboard',
+      (newGame: GameRecord) => {
+        console.log(newGame);
+        if (!games.find((game) => game.id === newGame.id)) {
+          setGames((oldGames) => [newGame, ...oldGames]);
+        }
+      }
+    );
   }, []);
-
-  console.log(counter);
 
   return (
     <div className="LeaderBoard">
-      <h1>LeaderBoard</h1>
-      <p>Counter: {counter}</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Difficulty</th>
-            <th>Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {store.games.map((entry) => (
-            <tr key={entry.id}>
-              <td>{entry.difficulty}</td>
-              <td>{entry.time}</td>
+      <h1>Leader Board</h1>
+      {!games.length && <p>No games yet</p>}
+      {games.length !== 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Difficulty</th>
+              <th>Board</th>
+              <th>Time</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {games.map((game) => (
+              <tr key={game.id}>
+                <td>{game.difficulty}</td>
+                <td>
+                  {game.height}↔ {game.width}↕ {game.poops}💩
+                </td>
+                <td>{game.time}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@ export interface StoreState {
   poops: number;
   width: number;
   height: number;
-  games: GameReacord[];
+  games: GameRecord[];
 }
 
 export interface Difficulty {
@@ -20,7 +20,7 @@ export interface FieldSquare {
   flag: boolean;
 }
 
-export interface GameReacord {
+export interface GameRecord {
   id: string;
   difficulty: string;
   time: number;

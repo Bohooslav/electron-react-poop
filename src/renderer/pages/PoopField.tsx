@@ -141,11 +141,20 @@ export default function PoopField() {
   }
 
   React.useEffect(() => {
-    window.electron.ipcRenderer.updateLeaderboard();
+    // window.electron.ipcRenderer.updateLeaderboard({
+    //   id: nanoid(),
+    //   difficulty: store.difficulty,
+    //   time: Math.floor(timer.timerTime / 1000),
+    //   poops: store.poops,
+    //   width: store.width,
+    //   height: store.height,
+    // });
 
-    window.electron.restart(generateField);
+    return window.electron.ipcRenderer.on('restart', generateField);
+  }, []);
 
-    window.electron.ipcRenderer.on(
+  React.useEffect(() => {
+    return window.electron.ipcRenderer.on(
       'update-difficulty',
       (difficulty: string) => {
         const newDifficulty: Difficulty = { difficulty };
@@ -290,20 +299,21 @@ export default function PoopField() {
         });
         setStatus(STATUS.sunglasses);
         stopTimer();
-        window.electron.ipcRenderer.updateLeaderboard();
+        const newGame = {
+          id: nanoid(),
+          difficulty: store.difficulty,
+          time: Math.floor(timer.timerTime / 1000),
+          poops: store.poops,
+          width: store.width,
+          height: store.height,
+          field,
+        };
+
+        window.electron.ipcRenderer.updateLeaderboard(newGame);
 
         dispatch({
           type: 'SAVE_GAME',
-          games: [
-            {
-              id: nanoid(),
-              difficulty: store.difficulty,
-              time: Math.floor(timer.timerTime / 1000),
-              width: store.width,
-              height: store.height,
-            },
-            ...store.games,
-          ],
+          games: [newGame, ...store.games],
         });
       }
     }

@@ -1,5 +1,5 @@
 import { put, takeEvery, all } from 'redux-saga/effects';
-import { Difficulty, GameReacord } from '../../types';
+import { Difficulty, GameRecord } from '../../types';
 
 export function* setDifficulty(event: {
   type: string;
@@ -8,7 +8,7 @@ export function* setDifficulty(event: {
   yield put({ type: 'SET_DIFFICULTY_FROM_SAGAS', payload: event.difficulty });
 }
 
-export function* saveGame(event: { type: string; games: GameReacord[] }) {
+export function* saveGame(event: { type: string; games: GameRecord[] }) {
   yield put({ type: 'SAVE_GAME_FROM_SAGAS', payload: event.games });
 }
 

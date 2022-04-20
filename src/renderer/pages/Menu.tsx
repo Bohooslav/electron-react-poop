@@ -16,14 +16,14 @@ function Menu() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [show_options, setShowOptions] = React.useState(false);
+  const [showOptions, setShowOptions] = React.useState(false);
   const [settings, setSettings] = React.useState({
     difficulty: 'junior',
     poops: 10,
     width: 9,
     height: 9,
   });
-
+v
   console.log(store);
 
   function setDifficulty(difficulty: string) {
@@ -49,7 +49,7 @@ function Menu() {
   }
 
   React.useEffect(() => {
-    window.electron.ipcRenderer.on(
+    return window.electron.ipcRenderer.on(
       'update-difficulty',
       (difficulty: string) => {
         setDifficulty(difficulty);
@@ -138,9 +138,9 @@ function Menu() {
   }
 
   const optionsStyles: React.CSSProperties = {
-    visibility: show_options ? 'visible' : 'hidden',
-    opacity: show_options ? 1 : 0,
-    transform: show_options ? 'scale(1)' : 'scale(0.95)',
+    visibility: showOptions ? 'visible' : 'hidden',
+    opacity: showOptions ? 1 : 0,
+    transform: showOptions ? 'scale(1)' : 'scale(0.95)',
   };
 
   return (
