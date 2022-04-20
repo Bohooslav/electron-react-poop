@@ -22,7 +22,7 @@ enum STATUS {
 let watchInterval: NodeJS.Timeout;
 
 export default function PoopField() {
-  const store = useSelector((stores: StoreState) => stores);
+  const store = useSelector((stor: StoreState) => stor);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -54,18 +54,17 @@ export default function PoopField() {
   function fieldSquare() {
     return store.width * store.height;
   }
+  function getRandomInt(max: number) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
 
   function generateField() {
-    function getRandomInt(max: number) {
-      return Math.floor(Math.random() * Math.floor(max));
-    }
-
+    clearInterval(watchInterval);
     setTimer({
       timerOn: false,
       timerTime: 0,
       timerStart: Date.now(),
     });
-    clearInterval(watchInterval);
 
     const fieldsize = store.width * store.height;
     const newField: FieldSquare[] = [];
@@ -130,7 +129,7 @@ export default function PoopField() {
 
       // For testing
       // if (newField[i].near && !newField[i].hasPoop) {
-      //   newField[i].open = true
+      //   newField[i].open = true;
       // }
       i++;
     }
@@ -139,19 +138,6 @@ export default function PoopField() {
     setWasThere([]);
     setFlags(0);
   }
-
-  React.useEffect(() => {
-    // window.electron.ipcRenderer.updateLeaderboard({
-    //   id: nanoid(),
-    //   difficulty: store.difficulty,
-    //   time: Math.floor(timer.timerTime / 1000),
-    //   poops: store.poops,
-    //   width: store.width,
-    //   height: store.height,
-    // });
-
-    return window.electron.ipcRenderer.on('restart', generateField);
-  }, []);
 
   React.useEffect(() => {
     return window.electron.ipcRenderer.on(
@@ -197,6 +183,11 @@ export default function PoopField() {
   // Initialize empty field while routed to this page
   React.useEffect(() => {
     generateField();
+
+    // Subscribe restart event
+    return window.electron.ipcRenderer.on('restart', () => {
+      generateField();
+    });
   }, [store.width, store.height, store.poops]);
 
   // Automatically open squares around empty squares

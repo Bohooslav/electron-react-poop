@@ -23,7 +23,7 @@ function Menu() {
     width: 9,
     height: 9,
   });
-v
+
   console.log(store);
 
   function setDifficulty(difficulty: string) {
